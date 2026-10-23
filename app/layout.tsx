@@ -42,9 +42,11 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Hamza Bhulla", ...(siteUrl ? { url: siteUrl } : {}) }],
   creator: "Hamza Bhulla",
-  verification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
-    ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
-    : undefined,
+  verification: {
+    google:
+      process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ??
+      "4xlcfy30PHZqClqqKCJymsXmDYVnIKrSZGYcpiDe928",
+  },
   alternates: siteUrl ? { canonical: "/" } : undefined,
   robots: {
     index: true,
