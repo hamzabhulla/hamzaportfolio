@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="750" viewBox="0 0 1200 750" fill="none">
+  <defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="1200" y2="750" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F7F1E7"/>
+      <stop offset="1" stop-color="#EADBC5"/>
+    </linearGradient>
+    <linearGradient id="plate" x1="690" y1="130" x2="1080" y2="570" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFDF8"/>
+      <stop offset="1" stop-color="#D7C8B3"/>
+    </linearGradient>
+    <linearGradient id="food" x1="780" y1="220" x2="1015" y2="490" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#B86436"/>
+      <stop offset="1" stop-color="#642D1E"/>
+    </linearGradient>
+    <filter id="shadow" x="620" y="80" width="560" height="600" filterUnits="userSpaceOnUse">
+      <feGaussianBlur stdDeviation="22"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="750" rx="28" fill="url(#paper)"/>
+  <rect x="34" y="30" width="1132" height="690" rx="18" stroke="#C5B49D" stroke-opacity=".65"/>
+  <path d="M76 112H1124" stroke="#C9B8A0"/>
+  <text x="76" y="78" fill="#322820" font-family="Georgia,serif" font-size="31" letter-spacing="1.8">EMBER &amp; CO.</text>
+  <text x="570" y="75" fill="#665547" font-family="Arial,sans-serif" font-size="12" letter-spacing="2.2">MENU</text>
+  <text x="665" y="75" fill="#665547" font-family="Arial,sans-serif" font-size="12" letter-spacing="2.2">OUR STORY</text>
+  <text x="805" y="75" fill="#665547" font-family="Arial,sans-serif" font-size="12" letter-spacing="2.2">RESERVATIONS</text>
+  <rect x="977" y="47" width="147" height="42" rx="21" fill="#442D22"/>
+  <text x="1005" y="73" fill="#FFF8EE" font-family="Arial,sans-serif" font-size="12" letter-spacing="1.3">ORDER ONLINE</text>
+  <text x="78" y="177" fill="#936444" font-family="Arial,sans-serif" font-size="12" letter-spacing="3.6">GOOD FOOD. GOOD COMPANY.</text>
+  <text x="72" y="272" fill="#33251D" font-family="Georgia,serif" font-size="86" letter-spacing="-3">Gather</text>
+  <text x="72" y="355" fill="#33251D" font-family="Georgia,serif" font-size="86" font-style="italic" letter-spacing="-3">around</text>
+  <text x="72" y="438" fill="#33251D" font-family="Georgia,serif" font-size="86" letter-spacing="-3">something</text>
+  <text x="72" y="521" fill="#A34F2B" font-family="Georgia,serif" font-size="86" font-style="italic" letter-spacing="-3">beautiful.</text>
+  <text x="78" y="581" fill="#746151" font-family="Arial,sans-serif" font-size="17">Seasonal plates, thoughtful ingredients,</text>
+  <text x="78" y="608" fill="#746151" font-family="Arial,sans-serif" font-size="17">and a table waiting just for you.</text>
+  <rect x="78" y="642" width="170" height="48" rx="24" fill="#A34F2B"/>
+  <text x="108" y="672" fill="#FFF8EE" font-family="Arial,sans-serif" font-size="13" letter-spacing="1.5">EXPLORE MENU ↗</text>
+  <ellipse cx="900" cy="394" rx="210" ry="220" fill="#3F2A1E" opacity=".18" filter="url(#shadow)"/>
+  <circle cx="900" cy="363" r="208" fill="#DDC5A8"/>
+  <circle cx="900" cy="363" r="190" fill="url(#plate)"/>
+  <circle cx="900" cy="363" r="153" stroke="#C9B79F" stroke-width="2"/>
+  <path d="M822 276C849 234 919 230 961 266C1007 306 1004 371 965 407C923 446 854 432 825 393C796 353 800 312 822 276Z" fill="url(#food)"/>
+  <path d="M839 283C869 260 916 255 948 284C974 306 976 348 951 376C924 408 873 405 849 379C823 352 821 308 839 283Z" fill="#C87C43"/>
+  <path d="M854 294L939 377M842 328L914 399M874 273L966 354M828 356L900 414" stroke="#E6B67A" stroke-width="9" stroke-linecap="round" opacity=".85"/>
+  <g fill="#647449">
+    <ellipse cx="786" cy="302" rx="25" ry="10" transform="rotate(-32 786 302)"/>
+    <ellipse cx="1004" cy="312" rx="25" ry="10" transform="rotate(38 1004 312)"/>
+    <ellipse cx="790" cy="405" rx="25" ry="10" transform="rotate(24 790 405)"/>
+    <ellipse cx="994" cy="413" rx="25" ry="10" transform="rotate(-26 994 413)"/>
+    <ellipse cx="881" cy="212" rx="25" ry="10" transform="rotate(12 881 212)"/>
+  </g>
+  <g fill="#D8A84E">
+    <circle cx="810" cy="350" r="7"/><circle cx="982" cy="354" r="6"/><circle cx="914" cy="435" r="7"/><circle cx="866" cy="247" r="6"/><circle cx="1002" cy="386" r="5"/>
+  </g>
+  <path d="M1080 528C1111 541 1131 570 1126 600" stroke="#A34F2B" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="1119" cy="615" r="5" fill="#A34F2B"/>
+  <text x="868" y="645" fill="#79624E" font-family="Arial,sans-serif" font-size="12" letter-spacing="2.5">MADE TO BE SHARED</text>
+</svg>
