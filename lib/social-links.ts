@@ -23,8 +23,8 @@ const configuredLinks = [
     icon: "linkedin" as const,
   },
   {
-    label: "Instagram @hc.ai.founder",
-    href: process.env.NEXT_PUBLIC_INSTAGRAM_URL?.trim() || "https://www.instagram.com/hc.ai.founder/",
+    label: "Instagram @hamzabhulla_",
+    href: process.env.NEXT_PUBLIC_INSTAGRAM_URL?.trim() || "https://www.instagram.com/hamzabhulla_/",
     icon: "instagram" as const,
   },
   {

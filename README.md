@@ -99,7 +99,7 @@ The portfolio currently links to these public profiles:
 
 - [GitHub](https://github.com/hamzabhulla)
 - [LinkedIn](https://www.linkedin.com/in/hamza-mohsin-67b00840a)
-- [Instagram — @hc.ai.founder](https://www.instagram.com/hc.ai.founder/)
+- [Instagram — @hamzabhulla_](https://www.instagram.com/hamzabhulla_/)
 - [Facebook — @hamzabhulla.dev](https://www.facebook.com/hamzabhulla.dev/)
 - [X — @hamzabuild](https://x.com/hamzabuild)
 
