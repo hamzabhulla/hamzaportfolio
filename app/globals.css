@@ -327,7 +327,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .section-index { margin: 0; color: #62665f; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 8px; letter-spacing: 0.1em; }
 
 .work-section { padding-top: clamp(90px, 11vw, 150px); padding-bottom: clamp(88px, 10vw, 135px); }
-.work-heading-row, .skills-heading-row {
+.work-heading-row, .skills-heading-row, .faq-heading-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(240px, 0.48fr);
   align-items: end;
@@ -609,7 +609,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .section-topline { padding-top: 14px; }
   .eyebrow { font-size: 8px; }
   .section-index { font-size: 7px; letter-spacing: 0.045em; text-align: right; }
-  .work-heading-row, .skills-heading-row { grid-template-columns: 1fr; gap: 17px; margin-top: 24px; margin-bottom: 32px; }
+  .work-heading-row, .skills-heading-row, .faq-heading-row { grid-template-columns: 1fr; gap: 17px; margin-top: 24px; margin-bottom: 32px; }
   .section-heading { font-size: clamp(3.3rem, 12vw, 5rem); }
   .section-lede { max-width: 480px; font-size: 13px; }
   .project-grid { grid-template-columns: 1fr; row-gap: 43px; }
@@ -1583,4 +1583,21 @@ button, a { -webkit-tap-highlight-color: transparent; }
     padding: 8px 32px 18px;
     background: var(--paper);
   }
+}
+
+/* FAQ: two-column Q&A grid above the contact footer, one column on mobile. */
+.faq-section { padding-top: 20px; padding-bottom: clamp(88px, 10vw, 140px); }
+.faq-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: clamp(24px, 4vw, 56px);
+  row-gap: 36px;
+}
+.faq-item { border-top: 1px solid var(--line); padding-top: 18px; }
+.faq-item h3 { margin: 0 0 10px; font-size: 16px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.35; }
+.faq-item p { margin: 0; color: #63675f; font-size: 13.5px; line-height: 1.85; }
+
+@media (max-width: 760px) {
+  .faq-section { padding-bottom: 78px; }
+  .faq-list { grid-template-columns: 1fr; row-gap: 28px; }
 }

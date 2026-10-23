@@ -124,7 +124,7 @@ try {
   if (expectedContact) {
     assert.ok(html.includes(expectedContact), "The configured public contact email should render.");
   }
-  for (const sectionId of ['id="top"', 'id="work"', 'id="about"', 'id="skills"', 'id="contact"']) {
+  for (const sectionId of ['id="top"', 'id="work"', 'id="about"', 'id="skills"', 'id="faq"', 'id="contact"']) {
     assert.ok(html.includes(sectionId), `Expected homepage section ${sectionId}.`);
   }
   for (const projectName of ["VibeTalk", "Ember &amp; Co.", "WebNotepad", "WhatsApp Concierge"]) {
@@ -154,6 +154,14 @@ try {
   assert.match(sitemapResponse.headers.get("content-type") ?? "", /xml/i);
   const sitemapText = await sitemapResponse.text();
   assert.ok(sitemapText.includes(`<loc>${expectedSiteUrl}</loc>`), "Sitemap should list the configured canonical origin.");
+
+  const llmsResponse = await request("/llms.txt");
+  assert.equal(llmsResponse.status, 200, "llms.txt should return HTTP 200.");
+  assert.match(llmsResponse.headers.get("content-type") ?? "", /text\/plain/i);
+  const llmsText = await llmsResponse.text();
+  assert.ok(llmsText.includes("# Hamza Bhulla"), "llms.txt should introduce Hamza Bhulla.");
+  assert.ok(llmsText.includes("Ember & Co."), "llms.txt should list the featured projects.");
+  assert.ok(llmsText.includes("heyhamza.dev@gmail.com") || (expectedContact && llmsText.includes(expectedContact)), "llms.txt should publish a contact email.");
 
   const imageResponse = await request("/opengraph-image");
   assert.equal(imageResponse.status, 200, "Open Graph image should return HTTP 200.");

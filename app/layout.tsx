@@ -83,6 +83,9 @@ export const metadata: Metadata = {
   },
 };
 
+const contactEmail =
+  process.env.NEXT_PUBLIC_CONTACT_EMAIL || "heyhamza.dev@gmail.com";
+
 const personSchema = {
   "@context": "https://schema.org",
   "@type": "ProfilePage",
@@ -92,6 +95,18 @@ const personSchema = {
     name: "Hamza Bhulla",
     jobTitle: "Full-Stack Developer",
     description: siteDescription,
+    ...(siteUrl ? { url: siteUrl } : {}),
+    email: contactEmail,
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Lahore",
+      addressRegion: "Punjab",
+      addressCountry: "PK",
+    },
+    nationality: {
+      "@type": "Country",
+      name: "Pakistan",
+    },
     knowsAbout: [
       "React",
       "TypeScript",

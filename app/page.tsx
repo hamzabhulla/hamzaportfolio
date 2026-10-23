@@ -3,6 +3,7 @@ import Hero from "@/components/Hero";
 import About from "@/components/About";
 import CaseStudy from "@/components/CaseStudy";
 import TechStack from "@/components/TechStack";
+import Faq from "@/components/Faq";
 import Contact from "@/components/Contact";
 import { projects } from "@/lib/mock-data";
 
@@ -40,6 +41,7 @@ export default function Home() {
 
         <About />
         <TechStack />
+        <Faq />
         <Contact />
       </main>
     </>
