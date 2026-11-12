@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Freelance Web Developer in Lahore — Hamza Bhulla";
+export const alt = "Freelance Web Developer in Lahore, Hamza Bhulla";
 export const size = {
   width: 1200,
   height: 630,
@@ -48,7 +48,7 @@ export default function LahoreOpenGraphImage() {
               fontWeight: 700,
             }}
           >
-            FREELANCE WEB DEVELOPER · LAHORE
+            FREELANCE WEB DEVELOPER, LAHORE
           </div>
           <div
             style={{
