@@ -1,25 +1,29 @@
+import type { ReactNode } from "react";
 import { ArrowUpRight, Mail } from "lucide-react";
 import SocialIcon from "@/components/SocialIcon";
 import { socialLinks } from "@/lib/social-links";
 
 const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "heyhamza.dev@gmail.com";
 
-export default function Contact() {
+export default function Contact({ cta, heading, currentArea }: { cta?: string; heading?: ReactNode; currentArea?: "lahore" | "muridke" }) {
   return (
     <footer id="contact" className="contact-section">
       <div className="contact-inner content-shell">
         <div className="section-topline">
           <p className="eyebrow">Have something in mind?</p>
-          <p className="section-index">LET’S MAKE IT USEFUL</p>
         </div>
         <div className="contact-main">
           <h2 className="contact-heading">
-            Good work starts
-            <br />
-            <span>with a conversation.</span>
+            {heading ?? (
+              <>
+                Good work starts
+                <br />
+                <span>with a conversation.</span>
+              </>
+            )}
           </h2>
           <div className="contact-cta">
-            <p>Open to remote roles, thoughtful collaborations, and select freelance projects with teams around the world.</p>
+            <p>{cta ?? "Open to remote roles, thoughtful collaborations, and select freelance projects with teams around the world."}</p>
             <a className="contact-email" href={"mailto:" + contactEmail}>
               <Mail size={17} aria-hidden="true" /> {contactEmail}
               <ArrowUpRight size={17} aria-hidden="true" />
@@ -43,6 +47,21 @@ export default function Contact() {
           </nav>
           <p className="copyright">© {new Date().getFullYear()} Hamza Bhulla</p>
         </div>
+
+        <nav className="service-areas" aria-label="Service areas">
+          <span>Service areas:</span>
+          {currentArea === "lahore" ? (
+            <span aria-current="page">Lahore</span>
+          ) : (
+            <a href="/web-developer-lahore">Lahore</a>
+          )}
+          <span aria-hidden="true">·</span>
+          {currentArea === "muridke" ? (
+            <span aria-current="page">Muridke</span>
+          ) : (
+            <a href="/web-developer-muridke">Muridke</a>
+          )}
+        </nav>
       </div>
     </footer>
   );
