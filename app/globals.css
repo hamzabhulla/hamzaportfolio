@@ -222,12 +222,205 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 .button-text:hover { gap: 12px; color: var(--blue); }
 
-/* Hero: single static project preview (replaces the draggable card stage). */
-.hero-preview { margin: 0; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: #dfe6f2; }
-.hero-preview img { display: block; width: 100%; height: auto; aspect-ratio: 1881 / 894; object-fit: cover; object-position: top center; }
-.hero-preview figcaption { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 18px; border-top: 1px solid var(--line); font-size: 13px; }
-.hero-preview figcaption span:first-child { font-weight: 650; letter-spacing: -0.02em; }
-.hero-preview figcaption span:last-child { color: #63675f; }
+/* Hero: draggable project-card stage (restored from HEAD 65a5228, extended
+   from three cards to all four projects). The static .hero-preview figure
+   is gone, no JSX references it anymore. */
+.hero-art {
+  position: relative;
+  min-width: 0;
+  min-height: 500px;
+  perspective: 1250px;
+}
+.project-stage {
+  position: absolute;
+  inset: 32px 4% 29px 2%;
+  transform-style: preserve-3d;
+  animation: stage-settle 850ms cubic-bezier(.2,.8,.2,1) both;
+}
+.stage-shadow {
+  position: absolute;
+  inset: 20% 8% 5% 10%;
+  border-radius: 50%;
+  background: rgba(26, 32, 72, 0.14);
+  filter: blur(35px);
+  transform: translateZ(-65px) rotate(-10deg);
+}
+.stage-card {
+  position: absolute;
+  overflow: hidden;
+  border: 1px solid rgba(23, 26, 25, 0.14);
+  border-radius: 8px;
+  background: var(--card);
+  box-shadow: 0 24px 55px rgba(39, 41, 35, 0.14);
+  transform-style: preserve-3d;
+  transition: transform 450ms cubic-bezier(.2,.8,.2,1), box-shadow 450ms ease;
+}
+.stage-card img {
+  width: 100%;
+  height: calc(100% - 29px);
+  object-fit: cover;
+  object-position: top center;
+  background: #e5e3db;
+}
+.stage-card-rear {
+  top: 6%;
+  right: 0;
+  width: 55%;
+  height: 48%;
+  transform: translateZ(-140px) rotateY(-16deg) rotateZ(8deg);
+  animation: card-in-rear 900ms 40ms both cubic-bezier(.2,.8,.2,1);
+}
+.stage-card-back {
+  top: 13%;
+  right: 2%;
+  width: 59%;
+  height: 53%;
+  transform: translateZ(-80px) rotateY(-13deg) rotateZ(6deg);
+  animation: card-in-back 900ms 80ms both cubic-bezier(.2,.8,.2,1);
+}
+.stage-card-middle {
+  top: 26%;
+  left: 1%;
+  width: 61%;
+  height: 53%;
+  transform: translateZ(0) rotateY(12deg) rotateZ(-7deg);
+  animation: card-in-middle 850ms 120ms both cubic-bezier(.2,.8,.2,1);
+}
+.stage-card-front {
+  top: 36%;
+  right: 5%;
+  width: 65%;
+  height: 48%;
+  border-color: rgba(23, 26, 25, 0.22);
+  box-shadow: 0 35px 75px rgba(39, 41, 35, 0.23);
+  transform: translateZ(70px) rotateY(-7deg) rotateZ(3deg);
+  animation: card-in-front 900ms 180ms both cubic-bezier(.2,.8,.2,1);
+}
+.mini-topbar {
+  display: flex;
+  height: 29px;
+  align-items: center;
+  gap: 4px;
+  border-bottom: 1px solid rgba(23, 26, 25, 0.08);
+  padding: 0 9px;
+  background: #fbfaf5;
+}
+.mini-dot { width: 4px; height: 4px; border-radius: 50%; background: #b7b8af; }
+.mini-window-title { margin-left: auto; color: #62665f; font-size: 7px; letter-spacing: 0.025em; }
+.stage-tag {
+  position: absolute;
+  right: 7px;
+  bottom: 7px;
+  border-radius: 3px;
+  padding: 5px 7px;
+  background: rgba(243, 241, 233, 0.93);
+  color: #3e423c;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 7px;
+  letter-spacing: 0.06em;
+}
+.stage-tag-dark { background: var(--blue); color: white; }
+
+.hero-art:hover .stage-card-rear { transform: translateZ(-120px) rotateY(-19deg) rotateZ(6deg) translateY(-3px); }
+.hero-art:hover .stage-card-back { transform: translateZ(-55px) rotateY(-17deg) rotateZ(4deg) translateY(-4px); }
+.hero-art:hover .stage-card-middle { transform: translateZ(10px) rotateY(15deg) rotateZ(-4deg) translateY(-5px); }
+.hero-art:hover .stage-card-front { transform: translateZ(88px) rotateY(-9deg) rotateZ(2deg) translateY(-8px); }
+
+@keyframes stage-settle {
+  from { opacity: 0; transform: rotateY(-7deg) rotateX(3deg) translateY(18px); }
+  to { opacity: 1; transform: rotateY(0) rotateX(0) translateY(0); }
+}
+@keyframes card-in-rear {
+  from { opacity: 0; transform: translate3d(35px, 12px, -170px) rotateY(-10deg) rotateZ(12deg); }
+  to { opacity: 1; transform: translateZ(-140px) rotateY(-16deg) rotateZ(8deg); }
+}
+@keyframes card-in-back {
+  from { opacity: 0; transform: translate3d(30px, 15px, -120px) rotateY(-8deg) rotateZ(10deg); }
+  to { opacity: 1; transform: translateZ(-80px) rotateY(-13deg) rotateZ(6deg); }
+}
+@keyframes card-in-middle {
+  from { opacity: 0; transform: translate3d(-15px, 25px, -25px) rotateY(4deg) rotateZ(-12deg); }
+  to { opacity: 1; transform: translateZ(0) rotateY(12deg) rotateZ(-7deg); }
+}
+@keyframes card-in-front {
+  from { opacity: 0; transform: translate3d(15px, 22px, 35px) rotateY(-2deg) rotateZ(7deg); }
+  to { opacity: 1; transform: translateZ(70px) rotateY(-7deg) rotateZ(3deg); }
+}
+
+/* Pointer-driven hero cards. Drag from the browser title bar. */
+.stage-card .drag-handle {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  width: 100%;
+  min-height: 29px;
+  height: 29px;
+  flex: 0 0 29px;
+  align-items: center;
+  gap: 4px;
+  border: 0;
+  border-radius: 0;
+  padding: 0 9px;
+  color: inherit;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  text-align: left;
+}
+.stage-card .drag-handle:active,
+.stage-card.is-dragging .drag-handle {
+  cursor: grabbing;
+}
+.stage-card.is-dragging {
+  z-index: 10;
+  box-shadow: 0 34px 70px rgba(39, 41, 35, 0.28);
+  transition: box-shadow 120ms ease;
+}
+.stage-card .drag-handle:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: -3px;
+}
+.stage-card .drag-handle .mini-window-title {
+  pointer-events: none;
+}
+.stage-card img {
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+.drag-hint {
+  position: absolute;
+  right: 5%;
+  bottom: 0;
+  margin: 0;
+  color: #62665f;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 8px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  opacity: .8;
+}
+
+/* Stack interaction: small cursor movement, then snap home while keeping the chosen card on top. */
+.project-stage .stage-card {
+  transition:
+    translate 180ms cubic-bezier(.2,.8,.2,1),
+    transform 450ms cubic-bezier(.2,.8,.2,1),
+    box-shadow 280ms ease;
+}
+.project-stage .stage-card.is-dragging {
+  z-index: 40 !important;
+  transition: box-shadow 120ms ease;
+}
+.project-stage .stage-card.is-frontmost {
+  z-index: 30 !important;
+}
+.project-stage .stage-card.is-frontmost.is-dragging {
+  z-index: 40 !important;
+}
+.project-stage .stage-card:not(.is-dragging) {
+  cursor: default;
+}
 
 .section-topline {
   display: flex;
@@ -823,6 +1016,42 @@ button, a { -webkit-tap-highlight-color: transparent; }
     background: transparent;
     color: var(--ink);
   }
+  .hero-art { min-height: 440px; }
+  .project-stage { inset: 38px 0 33px; }
+}
+
+/* Hero stage: final layout pass restored from HEAD 65a5228 as unconditional
+   top-level rules, exactly where HEAD had them (after its @1050 block).
+   This block MUST stay after the 1120px block above: same specificity, so
+   source order decides, and these 405px values are what beat HEAD's own
+   dead 440px rule at 761-1120px. The rear-layer values are the new fourth
+   card's analogue of HEAD's back/middle/front overrides. */
+.hero-art {
+  min-height: 405px;
+}
+
+.project-stage {
+  inset: 12px 4% 12px 2%;
+}
+
+.stage-card-rear {
+  top: 4%;
+  height: 50%;
+}
+
+.stage-card-back {
+  top: 10%;
+  height: 51%;
+}
+
+.stage-card-middle {
+  top: 23%;
+  height: 51%;
+}
+
+.stage-card-front {
+  top: 32%;
+  height: 50%;
 }
 
 
@@ -892,6 +1121,17 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .hero-kicker { flex-wrap: wrap; gap: 7px; font-size: 8px; letter-spacing: 0.12em; }
   .button-primary { min-height: 46px; padding-inline: 16px; font-size: 11px; }
   .button-text { font-size: 11px; }
+  .hero-art { min-height: min(91vw, 410px); margin: 0 -4px; }
+  .project-stage { inset: 20px 2% 25px; }
+  .stage-card-rear { top: 2%; right: 6%; width: 53%; height: 48%; }
+  .stage-card-back { top: 8%; right: 0; width: 57%; height: 49%; }
+  .stage-card-middle { top: 21%; left: 0; width: 61%; height: 49%; }
+  .stage-card-front { top: 34%; right: 3%; width: 65%; height: 48%; }
+  .mini-topbar { height: 23px; padding-inline: 7px; }
+  .stage-card img { height: calc(100% - 23px); }
+  .mini-window-title { font-size: 6px; }
+  .stage-tag { right: 5px; bottom: 5px; padding: 4px 5px; font-size: 6px; }
+  .drag-hint { right: 2%; font-size: 7px; }
   
   
   .section-topline { padding-top: 14px; }
@@ -1052,6 +1292,50 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .faq-section { padding-bottom: 78px; }
 }
 
+/* HEAD 65a5228 second @760 block (restored): later in the file than the
+   consolidated @760 block above, so its 350px cap, tighter stage inset and
+   wider cards win at <=760px, exactly as in HEAD. Rear-layer values are
+   the new fourth card's analogue of HEAD's back/middle/front shifts
+   (each card 1% wider/taller, tops 1% higher). */
+@media (max-width: 760px) {
+  .hero-art {
+    min-height: min(83vw, 350px);
+    margin: 0 -2px;
+  }
+
+  .project-stage {
+    inset: 12px 1% 8px;
+  }
+
+  .stage-card-rear {
+    top: 1%;
+    right: 5%;
+    width: 54%;
+    height: 49%;
+  }
+
+  .stage-card-back {
+    top: 7%;
+    right: 0;
+    width: 58%;
+    height: 50%;
+  }
+
+  .stage-card-middle {
+    top: 20%;
+    left: 0;
+    width: 62%;
+    height: 50%;
+  }
+
+  .stage-card-front {
+    top: 32%;
+    right: 2%;
+    width: 66%;
+    height: 49%;
+  }
+}
+
 
 /* Consolidated: all max-width: 390px rules in one block (was two). Placed after
    the 760px block so the narrower breakpoint still wins where they overlap. */
@@ -1073,6 +1357,18 @@ button, a { -webkit-tap-highlight-color: transparent; }
 
   .hero-actions {
     gap: 14px;
+  }
+
+  .hero-art {
+    min-height: 320px;
+  }
+}
+
+/* HEAD 65a5228 second @390 block (restored): later in the file, so its
+   295px cap wins over the 320px cap above at <=390px, exactly as in HEAD. */
+@media (max-width: 390px) {
+  .hero-art {
+    min-height: 295px;
   }
 }
 
@@ -1098,5 +1394,11 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .skill-group:focus-within,
   .skill-group li:hover {
     transform: none !important;
+  }
+  .stage-card.is-dragging {
+    transition: none !important;
+  }
+  .project-stage .stage-card {
+    transition: none !important;
   }
 }

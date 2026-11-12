@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Hamza Bhulla — Full-Stack Developer";
+export const alt = "Hamza Bhulla, Full-Stack Developer";
 export const size = {
   width: 1200,
   height: 630,
@@ -75,7 +75,7 @@ export default function OpenGraphImage() {
             fontSize: 18,
           }}
         >
-          <div>React · TypeScript · Full-stack web apps</div>
+          <div>React, TypeScript, Full-stack web apps</div>
           <div>Open to remote opportunities</div>
         </div>
       </div>
