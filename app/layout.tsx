@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { siteUrl } from "@/lib/site-url";
-import { socialLinks } from "@/lib/social-links";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -22,32 +21,23 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  ...(siteUrl ? { metadataBase: new URL(siteUrl) } : {}),
+  metadataBase: new URL(siteUrl),
   title: { default: siteTitle, template: "%s | Hamza Bhulla" },
   description: siteDescription,
   applicationName: "Hamza Bhulla Portfolio",
-  keywords: [
-    "Hamza Bhulla",
-    "full-stack developer",
-    "React developer",
-    "TypeScript developer",
-    "web developer portfolio",
-    "remote web developer",
-    "Supabase developer",
-    "PostgreSQL",
-    "Node.js and Express",
-    "Stripe integrations",
-    "WebRTC",
-    "Progressive web apps",
-  ],
-  authors: [{ name: "Hamza Bhulla", ...(siteUrl ? { url: siteUrl } : {}) }],
+  authors: [{ name: "Hamza Bhulla", url: siteUrl }],
   creator: "Hamza Bhulla",
-  verification: {
-    google:
-      process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ??
-      "4xlcfy30PHZqClqqKCJymsXmDYVnIKrSZGYcpiDe928",
-  },
-  alternates: siteUrl ? { canonical: "/" } : undefined,
+  // Verification is env-only: no hardcoded token fallback. Without
+  // NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION the meta tag is not rendered
+  // (the smoke test skips that assertion when the var is absent).
+  ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+    ? {
+        verification: {
+          google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+        },
+      }
+    : {}),
+  alternates: { canonical: "/" },
   robots: {
     index: true,
     follow: true,
@@ -65,85 +55,28 @@ export const metadata: Metadata = {
     siteName: "Hamza Bhulla",
     title: siteTitle,
     description: siteDescription,
-    ...(siteUrl ? {
-      url: siteUrl,
-      images: [{
-        url: "/opengraph-image",
-        width: 1200,
-        height: 630,
-        alt: "Hamza Bhulla — Full-Stack Developer",
-      }],
-    } : {}),
+    url: siteUrl,
+    images: [{
+      url: "/opengraph-image",
+      width: 1200,
+      height: 630,
+      alt: "Hamza Bhulla — Full-Stack Developer",
+    }],
   },
   twitter: {
     card: "summary_large_image",
     title: siteTitle,
     description: siteDescription,
-    ...(siteUrl ? { images: ["/opengraph-image"] } : {}),
-  },
-};
-
-const contactEmail =
-  process.env.NEXT_PUBLIC_CONTACT_EMAIL || "heyhamza.dev@gmail.com";
-
-const personSchema = {
-  "@context": "https://schema.org",
-  "@type": "ProfilePage",
-  ...(siteUrl ? { url: siteUrl } : {}),
-  mainEntity: {
-    "@type": "Person",
-    name: "Hamza Bhulla",
-    jobTitle: "Full-Stack Developer",
-    description: siteDescription,
-    ...(siteUrl ? { url: siteUrl } : {}),
-    email: contactEmail,
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: "Lahore",
-      addressRegion: "Punjab",
-      addressCountry: "PK",
-    },
-    nationality: {
-      "@type": "Country",
-      name: "Pakistan",
-    },
-    knowsAbout: [
-      "React",
-      "TypeScript",
-      "JavaScript",
-      "TanStack Start",
-      "Responsive web development",
-      "Full-stack web applications",
-      "REST APIs",
-      "Node.js and Express",
-      "Supabase Auth and Realtime",
-      "PostgreSQL and Row Level Security",
-      "Web Crypto API and AES-GCM group-message encryption",
-      "Stripe payments and webhooks",
-      "WebRTC",
-      "Web Push notifications",
-      "Progressive web apps and service workers",
-      "Offline-first browser applications",
-      "Automated tests with Vitest and Testing Library",
-    ],
-    sameAs: socialLinks.map((link) => link.href),
+    images: ["/opengraph-image"],
   },
 };
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const personJsonLd = JSON.stringify(personSchema).replace(/</g, "\\u003c");
-
   return (
     <html lang="en">
-      <body className={inter.variable}>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: personJsonLd }}
-        />
-        {children}
-      </body>
+      <body className={inter.variable}>{children}</body>
     </html>
   );
 }
