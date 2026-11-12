@@ -1,143 +1,126 @@
-# Hamza Bhulla — Developer Portfolio
+# Hamza Bhulla — Full-Stack Web Developer
 
-A responsive, single-page portfolio built to help hiring teams, founders, and clients quickly understand my work, technical range, and how to get in touch.
+**Portfolio:** [hamzabhulla.vercel.app](https://hamzabhulla.vercel.app) · **Based in Lahore, Pakistan — working remotely worldwide**
 
-The focus is straightforward: clear project previews, concise explanations, a practical skills overview, and easy access to source code and social profiles—without inflated metrics or buzzword-heavy claims.
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Strict-3178C6?logo=typescript)](https://www.typescriptlang.org/)
+[![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3FCF8E?logo=supabase)](https://supabase.com/)
 
-## What’s included
+I build production web apps end to end — real-time messaging, commerce, and business dashboards — with React, TypeScript, and Next.js. This repository is my portfolio: the live site, its source, and the engineering behind it.
 
-- **Project-led homepage** with short case-study summaries, technology tags, and demo/source links.
-- **Responsive layout** designed for mobile first and expanded for desktop.
-- **Interactive project-card stack** using CSS perspective and bounded pointer/touch dragging. Selecting a card brings it to the front; it returns to its original position on release.
-- **Accessible interactions** with keyboard support, visible focus states, and reduced-motion handling.
-- **Single-page navigation** for Work, About, Skills, and Contact, with social profile links in the desktop header and mobile menu.
-- **Search and sharing metadata** including page titles/descriptions, canonical URL support, Open Graph/Twitter metadata, a generated social preview image, and Person/ProfilePage structured data.
-- **Crawler routes** for /robots.txt and /sitemap.xml.
-- **Project data endpoint** at /api/projects.
+**Open to remote full-time roles and freelance work.** The fastest way to reach me is [heyhamza.dev@gmail.com](mailto:heyhamza.dev@gmail.com).
 
-## Built with
+## Featured work
+
+| Project | What it is | Stack | Links |
+| --- | --- | --- | --- |
+| **VibeTalk** | Real-time messaging app — rooms, direct messages, presence, voice notes, WebRTC voice/video calls, web push, and group end-to-end encryption. | React, TypeScript, Supabase, WebRTC | [Live](https://vibetalk.hamzabhulla.workers.dev) · [Source](https://github.com/hamzabhulla/VibeTalk) |
+| **Ember & Co.** | Restaurant storefront with ordering, reservations, Stripe payments, order tracking, and staff operations. | React, TypeScript, Express, Supabase, Stripe | [Live](https://embercoui.vercel.app) · [Source](https://github.com/hamzabhulla/embercoui) |
+| **WebNotepad** | Offline-first writing app — rich text, checklists, drawing, import/export, installable PWA, optional sync. | JavaScript, PWA, Service Workers, Upstash Redis | [Live](https://easynotepad.vercel.app) · [Source](https://github.com/hamzabhulla/web-notepad) |
+| **WhatsApp Concierge** | Booking-bot operations dashboard for a real client — leads, conversations, properties, training, and pairing. The client did not continue hosting, so the deployment is no longer live. | React, JavaScript, Supabase, Row Level Security | [Source](https://github.com/hamzabhulla/WhatsApp-Concierge-ResideElite) |
+
+More work: [github.com/hamzabhulla](https://github.com/hamzabhulla)
+
+## What I do
+
+- **Real-time web apps** — chat, presence, calls, and live updates with Supabase Realtime and WebRTC.
+- **Commerce & dashboards** — storefronts with payments, and operations dashboards that real businesses run on.
+- **AI-assisted automation** — booking bots and workflow automation that handle customer conversations and follow-ups.
+- **Offline-first & mobile-friendly** — PWAs and responsive layouts that work on low-end devices and flaky networks.
+- **Search-visible sites** — structured data, sitemaps, and social previews built in from the start, not bolted on.
+
+## Engineering quality
+
+This site is held to the same standard as client work:
+
+- **Type-safe** — TypeScript in strict mode, ESLint with React Hooks rules, zero warnings tolerated.
+- **Tested** — Vitest unit tests plus a production smoke test that rebuilds the app and checks every route, its metadata, schema, and social preview.
+- **CI on every push** — lint → typecheck → test → build → smoke test (`.github/workflows/ci.yml`).
+- **Secure by default** — Content Security Policy, `nosniff`, `DENY` framing, and referrer/permissions policies on every response.
+- **Accessible** — keyboard-operable accordion and navigation, visible focus states, `aria-expanded` states, and `prefers-reduced-motion` support.
+- **Fast & static** — 15 statically generated pages, self-hosted images, no external image hot-linking.
+
+## Tech stack
 
 | Area | Tools |
 | --- | --- |
-| Framework | Next.js 16, React 19 |
-| Language | TypeScript |
-| Styling | Custom CSS with PostCSS Autoprefixer |
-| Interaction | CSS perspective/transforms, pointer events, reduced-motion support |
-| Icons | Lucide React, Simple Icons |
-| Data foundation | Static project data; no database or external backend is required for the portfolio |
-
-The homepage’s featured-project content currently lives in **lib/mock-data.ts**. The **/api/projects** route returns that data as JSON.
+| Framework | Next.js 16 (App Router), React 19 |
+| Language | TypeScript (strict) |
+| Styling | Custom CSS, PostCSS Autoprefixer |
+| Data & realtime | Supabase (PostgreSQL, Auth, Realtime, Row Level Security) |
+| Payments | Stripe |
+| Calls | WebRTC |
+| Testing | Vitest, production smoke test (`scripts/smoke-test.mjs`) |
+| Hosting | Vercel |
 
 ## Run locally
 
-### Requirements
+Requirements: Node.js 20.9+, npm.
 
-- Node.js 20.9 or newer
-- npm
-
-### Setup
-
-~~~bash
+```bash
 git clone https://github.com/hamzabhulla/hamzaportfolio.git
 cd hamzaportfolio
 npm ci
-~~~
-
-Create a local environment file from the example:
-
-~~~bash
 cp .env.example .env.local
-~~~
-
-Set the values you actually use before testing deployment-specific metadata:
-
-~~~dotenv
-# Permanent production origin; do not set this to a temporary preview URL.
-NEXT_PUBLIC_SITE_URL=https://your-domain.example
-
-# Optional: override the default Instagram and Facebook profile links.
-NEXT_PUBLIC_INSTAGRAM_URL=
-NEXT_PUBLIC_FACEBOOK_URL=
-
-# Optional: Google Search Console HTML-tag verification value.
-NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=
-
-# Optional: public contact email shown on the site.
-NEXT_PUBLIC_CONTACT_EMAIL=
-~~~
-
-Start the development server:
-
-~~~bash
 npm run dev
-~~~
+```
 
-Open http://localhost:3000.
+Open [http://localhost:3000](http://localhost:3000).
+
+Environment variables (see `.env.example` for the full list):
+
+```dotenv
+NEXT_PUBLIC_SITE_URL=https://hamzabhulla.vercel.app
+NEXT_PUBLIC_CONTACT_EMAIL=heyhamza.dev@gmail.com
+NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=
+```
 
 ## Useful commands
 
 | Command | Purpose |
 | --- | --- |
-| npm run dev | Start the development server |
-| npm run build | Create a production build |
-| npm run start | Serve the production build locally |
-| npm run smoke-test | Check the built site’s metadata, project API, sitemap, robots file, and social preview (after build) |
-| npm run lint | Run ESLint with TypeScript and React Hooks rules |
-| npm run typecheck | Run TypeScript type checking without emitting files |
-
-## Deploy
-
-The project can be deployed to Vercel or another platform that supports Next.js 16 and Node.js 20.9 or newer.
-
-1. Import this repository into your hosting provider.
-2. Configure the environment variables listed above.
-3. Set **NEXT_PUBLIC_SITE_URL** to the permanent HTTPS domain after the domain is connected.
-4. Run a production build and review the site at desktop and mobile widths.
-5. Confirm that the contact email and all social links point to the intended accounts.
-
-The portfolio currently links to these public profiles:
-
-- [GitHub](https://github.com/hamzabhulla)
-- [LinkedIn](https://www.linkedin.com/in/hamza-mohsin-67b00840a)
-- [Instagram — @hamzabhulla_](https://www.instagram.com/hamzabhulla_/)
-- [Facebook — @hamzabhulla.dev](https://www.facebook.com/hamzabhulla.dev/)
-- [X — @hamzabuild](https://x.com/hamzabuild)
-
-## Search-engine setup
-
-The code provides metadata and crawler routes, but appearing in Google results is not automatic.
-
-1. Deploy the site to its permanent domain and set **NEXT_PUBLIC_SITE_URL**.
-2. Add the site to [Google Search Console](https://search.google.com/search-console/about).
-3. If using HTML-tag verification, copy the verification content value into **NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION** and redeploy.
-4. Submit **https://your-domain.example/sitemap.xml** in Search Console.
-5. Inspect the canonical URL, page title, description, social preview, and mobile layout after deployment.
-
-Search ranking and indexing depend on Google’s crawling and indexing decisions; this repository does not guarantee search placement.
+| `npm run dev` | Start the development server |
+| `npm run build` | Create a production build |
+| `npm run start` | Serve the production build locally |
+| `npm run test` | Run the Vitest unit tests |
+| `npm run smoke-test` | Verify the built site — routes, metadata, schema, sitemap, robots, social preview |
+| `npm run lint` | ESLint (TypeScript + React Hooks rules) |
+| `npm run typecheck` | TypeScript type checking without emitting files |
 
 ## Project structure
 
-~~~text
+```text
 app/
-  api/projects/route.ts  # JSON endpoint for project data
-  globals.css            # Design system, responsive layout, interactions
-  layout.tsx              # Metadata and structured data
-  opengraph-image.tsx     # Generated social preview image
-  page.tsx                # Single-page homepage composition
-  robots.ts               # robots.txt route
-  sitemap.ts              # sitemap.xml route
-components/               # Navigation, hero, projects, about, skills, contact
+  page.tsx                      # Homepage
+  web-developer-lahore/         # Freelance web developer in Lahore
+  web-developer-muridke/        # Web developer in Muridke (service area)
+  api/projects/route.ts         # Project data as JSON
+  globals.css                   # Design system, responsive layout
+  layout.tsx                    # Metadata and structured data
+  opengraph-image.tsx           # Generated social preview image
+  robots.ts / sitemap.ts        # robots.txt and sitemap.xml routes
+  llms.txt/route.ts             # llms.txt for AI crawlers
+components/                     # Navigation, hero, projects, about, skills, FAQ, contact
 lib/
-  mock-data.ts            # Featured project content
-  site-url.ts             # Canonical site URL handling
-  social-links.ts         # Social profile destinations
-public/                   # Local visual assets
-~~~
+  mock-data.ts                  # Featured project content
+  site-url.ts                   # Canonical site URL handling
+  social-links.ts               # Social profile destinations
+  to-plain-text.ts              # HTML-to-text for schema matching
+public/                         # Local visual assets
+scripts/smoke-test.mjs          # Production smoke test (self-rebuilding)
+.github/workflows/ci.yml        # CI: lint, typecheck, test, build, smoke test
+```
 
 ## Contact
 
-For remote roles, freelance work, or product collaborations, use the contact details and social links on the portfolio.
+- **Email:** [heyhamza.dev@gmail.com](mailto:heyhamza.dev@gmail.com)
+- **GitHub:** [github.com/hamzabhulla](https://github.com/hamzabhulla)
+- **LinkedIn:** [linkedin.com/in/hamza-mohsin-67b00840a](https://www.linkedin.com/in/hamza-mohsin-67b00840a)
+- **Instagram:** [@hamzabhulla_](https://www.instagram.com/hamzabhulla_/)
+- **Facebook:** [@hamzabhulla.dev](https://www.facebook.com/hamzabhulla.dev/)
+- **X:** [@hamzabuild](https://x.com/hamzabuild)
 
 ---
 
-Built by **Hamza Bhulla**.
+Built by **Hamza Bhulla** — Lahore, Pakistan.
