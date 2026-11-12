@@ -1,7 +1,11 @@
+import FaqAccordion from "@/components/FaqAccordion";
+
 const contactEmail =
   process.env.NEXT_PUBLIC_CONTACT_EMAIL || "heyhamza.dev@gmail.com";
 
-export const faqs = [
+// Not exported: the array is used only inside this file (schema +
+// accordion). The old `export` was dead — nothing imports it.
+const faqs = [
   {
     question: "What services do you offer?",
     answer:
@@ -61,26 +65,15 @@ export default function Faq() {
       />
       <div className="section-topline">
         <p className="eyebrow">FAQ</p>
-        <p className="section-index">QUESTIONS · 06</p>
       </div>
 
       <div className="faq-heading-row">
         <h2 id="faq-heading" className="section-heading">
           Common <span>questions.</span>
         </h2>
-        <p className="section-lede">
-          Short, honest answers — the same ones I would give you on a call.
-        </p>
       </div>
 
-      <div className="faq-list">
-        {faqs.map((faq) => (
-          <article className="faq-item" key={faq.question}>
-            <h3>{faq.question}</h3>
-            <p>{faq.answer}</p>
-          </article>
-        ))}
-      </div>
+      <FaqAccordion faqs={faqs} />
     </section>
   );
 }

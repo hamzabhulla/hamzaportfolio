@@ -3,8 +3,6 @@
 import { useRef, useState } from "react";
 import type { KeyboardEvent } from "react";
 import { ArrowUpRight, Menu, X } from "lucide-react";
-import SocialIcon from "@/components/SocialIcon";
-import { socialLinks } from "@/lib/social-links";
 
 const navItems = [
   { label: "Work", href: "#work" },
@@ -35,21 +33,6 @@ export default function SiteNav() {
         <nav className="desktop-nav" aria-label="Main navigation">
           {navItems.map((item) => (
             <a key={item.href} href={item.href}>{item.label}</a>
-          ))}
-        </nav>
-
-        <nav className="nav-socials" aria-label="Social profiles">
-          {socialLinks.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              target="_blank"
-              rel="noopener noreferrer me"
-              title={link.label}
-              aria-label={link.label}
-            >
-              <SocialIcon name={link.icon} size={15} />
-            </a>
           ))}
         </nav>
 
@@ -92,22 +75,6 @@ export default function SiteNav() {
             Contact<ArrowUpRight size={15} aria-hidden="true" />
           </a>
         </nav>
-        <div className="mobile-nav-socials">
-          <p>Find me online</p>
-          {socialLinks.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              target="_blank"
-              rel="noopener noreferrer me"
-              onClick={closeMenu}
-            >
-              <SocialIcon name={link.icon} size={15} />
-              <span>{link.label}</span>
-              <ArrowUpRight size={14} aria-hidden="true" />
-            </a>
-          ))}
-        </div>
       </div>
     </header>
   );

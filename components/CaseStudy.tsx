@@ -11,7 +11,6 @@ type Project = {
   liveUrl?: string;
   githubUrl?: string;
   statusNote?: string;
-  gallery?: { src: string; alt: string }[];
 };
 
 export default function CaseStudy({
@@ -21,11 +20,12 @@ export default function CaseStudy({
   project: Project;
   index: number;
 }) {
-  const imageSrc = project.image.startsWith("https://")
+  // Project images are local only (public/): next/image has no
+  // remotePatterns, so a remote URL would throw at runtime. The old
+  // https:// branch could never work — it is deleted, not kept.
+  const imageSrc = project.image.startsWith("/")
     ? project.image
-    : project.image.startsWith("/")
-      ? project.image
-      : "/" + project.image;
+    : "/" + project.image;
 
   return (
     <article className={"project-card project-card-" + ((index % 2) + 1)}>
@@ -37,11 +37,6 @@ export default function CaseStudy({
         aria-label={"Open " + project.title + " project"}
       >
         <div className="project-image">
-          <div className="project-image-chrome">
-            <span className="chrome-dots"><i /><i /><i /></span>
-            <span className="project-image-path">PROJECT / {project.id}</span>
-            <span className="project-image-arrow"><ArrowUpRight size={16} /></span>
-          </div>
           <Image
             src={imageSrc}
             alt={project.title + " project screenshot"}
@@ -51,41 +46,12 @@ export default function CaseStudy({
             loading="lazy"
             decoding="async"
           />
-          <span className="project-image-index">{project.id}</span>
         </div>
       </a>
-
-      {project.gallery && project.gallery.length > 0 && (
-        <div className="project-gallery" aria-label={project.title + " additional screenshots"}>
-          {project.gallery.map((item, galleryIndex) => (
-            <a
-              className="project-gallery-item"
-              key={item.src}
-              href={item.src}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={"Open full screenshot: " + item.alt}
-            >
-              <Image
-                src={item.src}
-                alt={item.alt}
-                width={640}
-                height={440}
-                sizes="(max-width: 760px) 28vw, (max-width: 1050px) 14vw, 12vw"
-                loading="lazy"
-                decoding="async"
-              />
-              <span>0{galleryIndex + 2}</span>
-            </a>
-          ))}
-        </div>
-      )}
 
       <div className="project-content">
         <div className="project-meta">
           <span>{project.category}</span>
-          <span className="project-meta-line" />
-          <span>0{index + 1} / 04</span>
         </div>
         <h3>{project.title}</h3>
         <p>{project.description}</p>

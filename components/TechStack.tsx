@@ -25,20 +25,25 @@ const groups = [
   },
 ];
 
-export default function TechStack() {
+import type { ReactNode } from "react";
+
+export default function TechStack({ intro, heading, closing }: { intro?: string; heading?: ReactNode; closing?: string }) {
   return (
     <section id="skills" className="skills-section content-shell" aria-labelledby="skills-heading">
       <div className="section-topline">
         <p className="eyebrow">Skills</p>
-        <p className="section-index">USED IN PROJECTS · 04 GROUPS</p>
       </div>
 
       <div className="skills-heading-row">
         <h2 id="skills-heading" className="section-heading">
-          My <span>toolkit.</span>
+          {heading ?? (
+            <>
+              My <span>toolkit.</span>
+            </>
+          )}
         </h2>
         <p className="skills-intro">
-          A practical stack, built by shipping real products.
+          {intro ?? "A practical stack, built by shipping real products."}
         </p>
       </div>
 
@@ -47,7 +52,6 @@ export default function TechStack() {
           <article className="skill-group" key={group.number}>
             <div className="skill-card-heading">
               <span className="skill-number">{group.number}</span>
-              <span className="skill-card-mark" aria-hidden="true">↗</span>
             </div>
             <h3>{group.title}</h3>
             <p className="skill-summary">{group.summary}</p>
@@ -57,6 +61,8 @@ export default function TechStack() {
           </article>
         ))}
       </div>
+
+      {closing && <p className="skills-closing">{closing}</p>}
     </section>
   );
 }

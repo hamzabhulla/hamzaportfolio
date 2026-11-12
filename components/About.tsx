@@ -1,4 +1,6 @@
-export default function About() {
+import type { ReactNode } from "react";
+
+export default function About({ note, headline, lead }: { note?: string; headline?: ReactNode; lead?: string }) {
   return (
     <section
       id="about"
@@ -7,28 +9,32 @@ export default function About() {
     >
       <div className="section-topline">
         <p className="eyebrow">About</p>
-        <p className="section-index">PAKISTAN · OPEN TO REMOTE</p>
       </div>
 
       <div className="about-grid">
         <h2 id="about-heading" className="section-heading">
-          Good software
-          <br />
-          <span>feels simple.</span>
+          {headline ?? (
+            <>
+              Good software
+              <br />
+              <span>feels simple.</span>
+            </>
+          )}
         </h2>
 
         <div className="about-copy">
           <p className="about-lead">
-            I’m Hamza Bhulla, a full-stack developer building web apps from
-            interface to backend, with care for clarity and reliability.
+            {lead ??
+              "I’m Hamza Bhulla, a full-stack developer building web apps from interface to backend, with care for clarity and reliability."}
           </p>
           <p>
             My work spans real-time messaging, restaurant commerce,
             offline-first productivity, and a WhatsApp concierge dashboard
             built for a real customer.
           </p>
+          {note && <p>{note}</p>}
           <a className="text-link" href="#contact">
-            Work with me <span aria-hidden="true">↗</span>
+            Work with me
           </a>
         </div>
       </div>
