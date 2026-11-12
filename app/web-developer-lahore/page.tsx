@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import SiteNav from "@/components/SiteNav";
-import LocalLanding from "@/components/LocalLanding";
+import LocalLanding, { LocalFaqSection } from "@/components/LocalLanding";
+import type { LocalFaq } from "@/components/LocalLanding";
 import CaseStudy from "@/components/CaseStudy";
 import About from "@/components/About";
 import TechStack from "@/components/TechStack";
@@ -42,6 +43,44 @@ export const metadata: Metadata = {
   },
 };
 
+const faqs: LocalFaq[] = [
+  {
+    question: "What kind of work do you do for Lahore businesses?",
+    answer:
+      "Web apps and SaaS products, restaurant ordering and e-commerce, and dashboards that run the operations behind a business. I build end to end: the interface, the backend, the database, and the integrations like payments and WhatsApp.",
+  },
+  {
+    question: "Are you based in Lahore?",
+    answer:
+      "Yes. I'm based in Lahore, Punjab, Pakistan, and I work remotely with clients in Lahore and around the world. Communication is async-friendly, and I make time to overlap for calls and updates.",
+  },
+  {
+    question: "Have you built anything for a real client?",
+    answer:
+      "Yes. I built a WhatsApp concierge dashboard for a real customer at RESI D'ELITE, for managing bookings, leads, conversations and properties. I also shipped VibeTalk, a real-time messaging app, and Ember & Co., a complete restaurant platform.",
+  },
+  {
+    question: "How much does a website or web app cost?",
+    answer:
+      "It depends on the scope. A business website and a full web app with ordering, payments or a dashboard are different jobs. Email me a few lines about what you're building and I'll give you a quote after we talk through the scope.",
+  },
+  {
+    question: "How long does a typical project take?",
+    answer:
+      "It depends on the scope and on how quickly content and feedback come back. We agree on the scope and the timeline before work starts, and I only take on work I can finish properly.",
+  },
+  {
+    question: "Do you work with businesses outside Lahore?",
+    answer: (
+      <>
+        Yes. Most of my work is remote, so I work with clients across
+        Pakistan and internationally. I also serve businesses in Muridke.
+        See my <a href="/web-developer-muridke">Muridke page</a> for that.
+      </>
+    ),
+  },
+];
+
 export default function WebDeveloperLahore() {
   return (
     <>
@@ -79,44 +118,7 @@ export default function WebDeveloperLahore() {
                 "Fast, mobile-first websites for Lahore businesses: what you do, how to reach you, and how to order or book, without clutter.",
             },
           ]}
-          faqs={[
-            {
-              question: "What kind of work do you do for Lahore businesses?",
-              answer:
-                "Web apps and SaaS products, restaurant ordering and e-commerce, and dashboards that run the operations behind a business. I build end to end: the interface, the backend, the database, and the integrations like payments and WhatsApp.",
-            },
-            {
-              question: "Are you based in Lahore?",
-              answer:
-                "Yes. I'm based in Lahore, Punjab, Pakistan, and I work remotely with clients in Lahore and around the world. Communication is async-friendly, and I make time to overlap for calls and updates.",
-            },
-            {
-              question: "Have you built anything for a real client?",
-              answer:
-                "Yes. I built a WhatsApp concierge dashboard for a real customer at RESI D'ELITE, for managing bookings, leads, conversations and properties. I also shipped VibeTalk, a real-time messaging app, and Ember & Co., a complete restaurant platform.",
-            },
-            {
-              question: "How much does a website or web app cost?",
-              answer:
-                "It depends on the scope. A business website and a full web app with ordering, payments or a dashboard are different jobs. Email me a few lines about what you're building and I'll give you a quote after we talk through the scope.",
-            },
-            {
-              question: "How long does a typical project take?",
-              answer:
-                "It depends on the scope and on how quickly content and feedback come back. We agree on the scope and the timeline before work starts, and I only take on work I can finish properly.",
-            },
-            {
-              question: "Do you work with businesses outside Lahore?",
-              answer: (
-                <>
-                  Yes. Most of my work is remote, so I work with clients
-                  across Pakistan and internationally. I also serve businesses
-                  in Muridke. See my{" "}
-                  <a href="/web-developer-muridke">Muridke page</a> for that.
-                </>
-              ),
-            },
-          ]}
+          faqs={faqs}
         />
 
         <section
@@ -156,6 +158,7 @@ export default function WebDeveloperLahore() {
           intro="The stack behind the web apps: React, TypeScript and Supabase, with the payments and realtime integrations my Lahore projects run on. One stack, end to end, so nothing gets lost between the interface and the database."
           closing="The same stack runs everything from a restaurant ordering system to a real-time chat app, the tools stay the same, the product changes with the business."
         />
+        <LocalFaqSection faqs={faqs} />
         <Contact currentArea="lahore" cta="Open to remote roles, thoughtful collaborations, and select freelance projects, with businesses in Lahore and teams around the world. Email me a few lines about what you're building and I'll tell you honestly whether it's a good fit." />
       </main>
     </>
