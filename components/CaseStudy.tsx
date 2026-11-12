@@ -8,6 +8,8 @@ type Project = {
   description: string;
   tags: string[];
   image: string;
+  imageWidth: number;
+  imageHeight: number;
   liveUrl?: string;
   githubUrl?: string;
   statusNote?: string;
@@ -36,12 +38,17 @@ export default function CaseStudy({
         rel="noopener noreferrer"
         aria-label={"Open " + project.title + " project"}
       >
-        <div className="project-image">
+        <div
+          className="project-image"
+          style={{
+            aspectRatio: project.imageWidth + " / " + project.imageHeight,
+          }}
+        >
           <Image
             src={imageSrc}
             alt={project.title + " project screenshot"}
-            width={1200}
-            height={800}
+            width={project.imageWidth}
+            height={project.imageHeight}
             sizes="(max-width: 760px) calc(100vw - 40px), (max-width: 1050px) calc(50vw - 34px), 620px"
             loading="lazy"
             decoding="async"
