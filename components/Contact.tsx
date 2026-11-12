@@ -50,16 +50,18 @@ export default function Contact({ cta, heading, currentArea }: { cta?: string; h
 
         <nav className="service-areas" aria-label="Service areas">
           <span>Service areas:</span>
-          {currentArea === "lahore" ? (
-            <span aria-current="page">Lahore</span>
-          ) : (
-            <a href="/web-developer-lahore">Lahore</a>
-          )}
-          {currentArea === "muridke" ? (
-            <span aria-current="page">Muridke</span>
-          ) : (
-            <a href="/web-developer-muridke">Muridke</a>
-          )}
+          <a
+            href="/web-developer-lahore"
+            aria-current={currentArea === "lahore" ? "page" : undefined}
+          >
+            Lahore
+          </a>
+          <a
+            href="/web-developer-muridke"
+            aria-current={currentArea === "muridke" ? "page" : undefined}
+          >
+            Muridke
+          </a>
         </nav>
       </div>
     </footer>
