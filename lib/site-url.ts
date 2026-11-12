@@ -27,8 +27,8 @@ export function normalizeSiteUrl(value?: string): string | undefined {
  * var silently made the sitemap ship empty and robots drop its Sitemap
  * line. The canonical URL must never be undefined for this site.
  *
- * (This repo deploys on Vercel only — the old platform config file
- * was deleted in round 3 — so no other platform's URL env var is
+ * (This repo deploys on Vercel only. The old platform config file
+ * was deleted in round 3, so no other platform's URL env var is
  * consulted.)
  */
 export const siteUrl =

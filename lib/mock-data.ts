@@ -40,7 +40,7 @@ export const projects = [
       "A booking-bot operations dashboard built for a real customer to manage leads, conversations, properties, training, and pairing. The client did not continue hosting, so the deployment is no longer live.",
     tags: ["React", "JavaScript", "Supabase", "Row Level Security"],
     image: "/whatsapp-concierge-preview.png",
-    statusNote: "Client project · no longer hosted",
+    statusNote: "Client project, no longer hosted",
     githubUrl: "https://github.com/hamzabhulla/WhatsApp-Concierge-ResideElite",
   },
 ];
