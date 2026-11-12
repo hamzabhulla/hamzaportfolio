@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import SiteNav from "@/components/SiteNav";
-import LocalLanding from "@/components/LocalLanding";
+import LocalLanding, { LocalFaqSection } from "@/components/LocalLanding";
+import type { LocalFaq } from "@/components/LocalLanding";
 import CaseStudy from "@/components/CaseStudy";
 import About from "@/components/About";
 import TechStack from "@/components/TechStack";
@@ -45,6 +46,49 @@ export const metadata: Metadata = {
   },
 };
 
+const faqs: LocalFaq[] = [
+  {
+    question: "I'm in Muridke and you're in Lahore. How does that work?",
+    answer:
+      "Everything runs remotely. We talk by message and call, I build the website online, and you review previews on your own phone. No office visits are needed, and the work is the same as what my Lahore clients get.",
+  },
+  {
+    question: "What can you build for a small business in Muridke?",
+    answer:
+      "A website for your shop, clinic or service, ordering and reservations for a restaurant or cafe, or a small booking tool that works with WhatsApp. Tell me what your business needs and I'll tell you honestly whether I can build it.",
+  },
+  {
+    question: "Can I see the website before it goes live?",
+    answer:
+      "Yes. I share previews as I build, and you check each step on your own phone. Nothing goes live until you're happy with it.",
+  },
+  {
+    question: "How much does a website for a small business cost?",
+    answer:
+      "It depends on what the website has to do. A simple business website and a site with ordering or booking are different jobs. Email me a few lines about your business and I'll give you a quote after we talk through the scope.",
+  },
+  {
+    question: "Do you also work in Lahore?",
+    answer: (
+      <>
+        Yes. I&apos;m based in Lahore and work with businesses there too.
+        See my <a href="/web-developer-lahore">Lahore page</a> for that.
+        Muridke is part of the same service area.
+      </>
+    ),
+  },
+  {
+    question: "How do we start?",
+    answer: (
+      <>
+        Email me at {contactEmail} with a few lines about your business and
+        what you want the website to do. We&apos;ll talk through the scope
+        first, and I&apos;ll tell you honestly if it&apos;s a good fit.
+      </>
+    ),
+  },
+];
+
 export default function WebDeveloperMuridke() {
   return (
     <>
@@ -82,8 +126,6 @@ export default function WebDeveloperMuridke() {
                 "Small, focused web apps with React and TypeScript: a booking form, a customer list, a dashboard, built to be maintained, not to impress.",
             },
           ]}
-          faqHeadingLine="Questions, "
-          faqHeadingSpan="answered."
           process={{
             heading: "How remote work works.",
             lede: "No office visits needed. The whole project runs on messages and calls.",
@@ -110,49 +152,7 @@ export default function WebDeveloperMuridke() {
               },
             ],
           }}
-          faqs={[
-            {
-              question: "I'm in Muridke and you're in Lahore. How does that work?",
-              answer:
-                "Everything runs remotely. We talk by message and call, I build the website online, and you review previews on your own phone. No office visits are needed, and the work is the same as what my Lahore clients get.",
-            },
-            {
-              question: "What can you build for a small business in Muridke?",
-              answer:
-                "A website for your shop, clinic or service, ordering and reservations for a restaurant or cafe, or a small booking tool that works with WhatsApp. Tell me what your business needs and I'll tell you honestly whether I can build it.",
-            },
-            {
-              question: "Can I see the website before it goes live?",
-              answer:
-                "Yes. I share previews as I build, and you check each step on your own phone. Nothing goes live until you're happy with it.",
-            },
-            {
-              question: "How much does a website for a small business cost?",
-              answer:
-                "It depends on what the website has to do. A simple business website and a site with ordering or booking are different jobs. Email me a few lines about your business and I'll give you a quote after we talk through the scope.",
-            },
-            {
-              question: "Do you also work in Lahore?",
-              answer: (
-                <>
-                  Yes. I&apos;m based in Lahore and work with businesses there
-                  too. See my <a href="/web-developer-lahore">Lahore page</a>{" "}
-                  for that. Muridke is part of the same service area.
-                </>
-              ),
-            },
-            {
-              question: "How do we start?",
-              answer: (
-                <>
-                  Email me at {contactEmail} with a few lines about your
-                  business and what you want the website to do. We&apos;ll
-                  talk through the scope first, and I&apos;ll tell you
-                  honestly if it&apos;s a good fit.
-                </>
-              ),
-            },
-          ]}
+          faqs={faqs}
         />
 
         <section
@@ -203,6 +203,11 @@ export default function WebDeveloperMuridke() {
               A simple <span>toolkit.</span>
             </>
           }
+        />
+        <LocalFaqSection
+          faqs={faqs}
+          faqHeadingLine="Questions, "
+          faqHeadingSpan="answered."
         />
         <Contact
           currentArea="muridke"
