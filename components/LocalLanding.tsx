@@ -39,10 +39,38 @@ export type LocalLandingProps = {
   servicesLede: string;
   services: LocalService[];
   process?: LocalProcess;
-  faqHeadingLine?: string;
-  faqHeadingSpan?: string;
   faqs: LocalFaq[];
 };
+
+export function LocalFaqSection({
+  faqs,
+  faqHeadingLine = "Common ",
+  faqHeadingSpan = "questions.",
+}: {
+  faqs: LocalFaq[];
+  faqHeadingLine?: string;
+  faqHeadingSpan?: string;
+}) {
+  return (
+    <section
+      id="faq"
+      className="faq-section content-shell"
+      aria-labelledby="local-faq-heading"
+    >
+      <div className="section-topline">
+        <p className="eyebrow">FAQ</p>
+      </div>
+
+      <div className="faq-heading-row">
+        <h2 id="local-faq-heading" className="section-heading">
+          {faqHeadingLine}<span>{faqHeadingSpan}</span>
+        </h2>
+      </div>
+
+      <FaqAccordion faqs={faqs} />
+    </section>
+  );
+}
 
 const contactEmail =
   process.env.NEXT_PUBLIC_CONTACT_EMAIL || "heyhamza.dev@gmail.com";
@@ -59,8 +87,6 @@ export default function LocalLanding({
   servicesLede,
   services,
   process,
-  faqHeadingLine = "Common ",
-  faqHeadingSpan = "questions.",
   faqs,
 }: LocalLandingProps) {
   const base = siteUrl;
@@ -205,24 +231,6 @@ export default function LocalLanding({
           </div>
         </section>
       )}
-
-      <section
-        id="faq"
-        className="faq-section content-shell"
-        aria-labelledby="local-faq-heading"
-      >
-        <div className="section-topline">
-          <p className="eyebrow">FAQ</p>
-        </div>
-
-        <div className="faq-heading-row">
-          <h2 id="local-faq-heading" className="section-heading">
-            {faqHeadingLine}<span>{faqHeadingSpan}</span>
-          </h2>
-        </div>
-
-        <FaqAccordion faqs={faqs} />
-      </section>
     </>
   );
 }
