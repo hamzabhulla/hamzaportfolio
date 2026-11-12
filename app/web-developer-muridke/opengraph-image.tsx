@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Web Developer in Muridke — Hamza Bhulla";
+export const alt = "Web Developer in Muridke, Hamza Bhulla";
 export const size = {
   width: 1200,
   height: 630,
@@ -48,7 +48,7 @@ export default function MuridkeOpenGraphImage() {
               fontWeight: 700,
             }}
           >
-            WEB DEVELOPER · MURIDKE
+            WEB DEVELOPER, MURIDKE
           </div>
           <div
             style={{
