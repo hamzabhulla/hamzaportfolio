@@ -1,12 +1,34 @@
 import assert from "node:assert/strict";
-import { spawn } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { createServer } from "node:net";
 
-const configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+// The test rebuilds the production app itself before serving it, so it can
+// never pass against a stale .next directory: a page deleted from source
+// must fail this test, even when nobody ran `npm run build` first. The
+// build runs with the same environment as the test, so values baked into
+// the HTML at build time (site URL, verification token, contact email)
+// always match what the assertions below expect — the test is no longer
+// coupled to a separately-run build's environment.
+//
+// Environment contract (all three vars are read from this process's env,
+// which is also the build's env):
+//   NEXT_PUBLIC_SITE_URL — optional. Defaults to the production fallback
+//     https://hamzabhulla.vercel.app, matching the app's own fallback in
+//     lib/site-url.ts. Any absolute URL works; the test asserts canonicals,
+//     sitemap, robots and llms.txt against it.
+//   NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION — optional. When set, the test
+//     asserts the meta tag and its value; when unset, that assertion is
+//     skipped (the app renders no verification meta without it).
+//   NEXT_PUBLIC_CONTACT_EMAIL — optional. Same pattern: asserted only
+//     when set.
+const configuredSiteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://hamzabhulla.vercel.app";
 const expectedVerification = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION?.trim();
 const expectedContact = process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim();
 
-assert.ok(configuredSiteUrl, "NEXT_PUBLIC_SITE_URL must be set for production-route smoke tests.");
+if (!process.env.NEXT_PUBLIC_SITE_URL?.trim()) {
+  console.log("NEXT_PUBLIC_SITE_URL is not set; smoke tests use the production fallback https://hamzabhulla.vercel.app.");
+}
 
 let expectedSiteUrl;
 try {
@@ -31,6 +53,14 @@ async function getFreePort() {
   await new Promise((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
   return port;
 }
+
+console.log("Rebuilding the production app so the smoke test never runs against a stale build…");
+const buildResult = spawnSync(
+  process.execPath,
+  ["node_modules/next/dist/bin/next", "build"],
+  { cwd: process.cwd(), env: process.env, stdio: "inherit" },
+);
+assert.equal(buildResult.status, 0, "Production build must succeed before smoke tests run.");
 
 const port = await getFreePort();
 const baseUrl = `http://127.0.0.1:${port}`;
@@ -107,6 +137,11 @@ try {
     "camera=(), microphone=(), geolocation=()",
     "Unused sensitive browser capabilities should be disabled.",
   );
+  assert.equal(
+    homeResponse.headers.get("content-security-policy"),
+    "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'",
+    "A Content-Security-Policy header should be present (unsafe-inline is required by Next.js inline runtime scripts and JSON-LD).",
+  );
   const html = await homeResponse.text();
 
   assert.ok(html.includes("Hamza Bhulla | Full-Stack Developer"), "The homepage title should render.");
@@ -155,13 +190,93 @@ try {
   const sitemapText = await sitemapResponse.text();
   assert.ok(sitemapText.includes(`<loc>${expectedSiteUrl}</loc>`), "Sitemap should list the configured canonical origin.");
 
+  // Local service pages: Lahore + Muridke. A regression here must fail the
+  // test — previously the smoke test never requested either page, so both
+  // could have 404'd while the test still passed.
+  const localPages = [
+    {
+      path: "/web-developer-lahore",
+      title: "Freelance Web Developer in Lahore | Hamza Bhulla",
+      ogImage: "/web-developer-lahore/opengraph-image",
+    },
+    {
+      path: "/web-developer-muridke",
+      title: "Web Developer in Muridke | Hamza Bhulla",
+      ogImage: "/web-developer-muridke/opengraph-image",
+    },
+  ];
+  for (const localPage of localPages) {
+    const pageResponse = await request(localPage.path);
+    assert.equal(pageResponse.status, 200, `${localPage.path} should return HTTP 200.`);
+    assert.match(pageResponse.headers.get("content-type") ?? "", /text\/html/i);
+    const pageHtml = await pageResponse.text();
+    assert.ok(pageHtml.includes(`<title>${localPage.title}</title>`), `${localPage.path} should render its title.`);
+    const localCanonicalMatch = pageHtml.match(/<link\b(?=[^>]*\brel="canonical")(?=[^>]*\bhref="([^"]+)")[^>]*>/);
+    assert.ok(localCanonicalMatch, `${localPage.path} canonical link should be present.`);
+    assert.equal(
+      new URL(localCanonicalMatch[1], expectedSiteUrl).pathname,
+      localPage.path,
+      `${localPage.path} canonical link should point to the page itself.`,
+    );
+    assert.ok(pageHtml.includes('property="og:image"'), `${localPage.path} should declare an Open Graph image.`);
+    assert.ok(
+      pageHtml.includes(`${expectedSiteUrl}${localPage.ogImage}`),
+      `${localPage.path} Open Graph image should be its own per-page image resolving against the configured site origin.`,
+    );
+    assert.ok(pageHtml.includes('name="twitter:image"'), `${localPage.path} should declare a Twitter image.`);
+    assert.ok(pageHtml.includes('id="about"'), `${localPage.path} should render the About section.`);
+    assert.ok(pageHtml.includes('id="faq"'), `${localPage.path} should render the FAQ section.`);
+    assert.ok(
+      sitemapText.includes(`<loc>${expectedSiteUrl}${localPage.path}</loc>`),
+      `Sitemap should list ${localPage.path}.`,
+    );
+    const pageAnchorTargets = [...pageHtml.matchAll(/\bhref="#([^"]+)"/g)].map(([, id]) => id);
+    const pageRenderedIds = new Set([...pageHtml.matchAll(/\bid="([^"]+)"/g)].map(([, id]) => id));
+    for (const targetId of pageAnchorTargets) {
+      assert.ok(pageRenderedIds.has(targetId), `${localPage.path} in-page link should target an existing element: #${targetId}`);
+    }
+    const jsonLdBlocks = [...pageHtml.matchAll(/<script type="application\/ld\+json">(.*?)<\/script>/gs)]
+      .map(([, json]) => {
+        try {
+          return JSON.parse(json);
+        } catch {
+          return null;
+        }
+      })
+      .filter(Boolean);
+    const faqPage = jsonLdBlocks
+      .flatMap((block) => block["@graph"] ?? [])
+      .find((node) => node["@type"] === "FAQPage");
+    assert.ok(faqPage, `${localPage.path} should declare FAQPage schema.`);
+    assert.equal(faqPage.mainEntity.length, 6, `${localPage.path} FAQ schema should list six questions.`);
+    for (const question of faqPage.mainEntity) {
+      assert.ok(pageHtml.includes(question.name), `${localPage.path} FAQ schema question should match a visible question.`);
+    }
+  }
+
   const llmsResponse = await request("/llms.txt");
   assert.equal(llmsResponse.status, 200, "llms.txt should return HTTP 200.");
   assert.match(llmsResponse.headers.get("content-type") ?? "", /text\/plain/i);
   const llmsText = await llmsResponse.text();
   assert.ok(llmsText.includes("# Hamza Bhulla"), "llms.txt should introduce Hamza Bhulla.");
   assert.ok(llmsText.includes("Ember & Co."), "llms.txt should list the featured projects.");
-  assert.ok(llmsText.includes("heyhamza.dev@gmail.com") || (expectedContact && llmsText.includes(expectedContact)), "llms.txt should publish a contact email.");
+  // Strict email assertion: when NEXT_PUBLIC_CONTACT_EMAIL is set, llms.txt
+  // must publish exactly that address. The old either/or assertion passed
+  // even if the app ignored the env var and always rendered the hardcoded
+  // fallback — this must fail in that case. When unset, the fallback is the
+  // only correct value.
+  const fallbackContact = "heyhamza.dev@gmail.com";
+  if (expectedContact) {
+    assert.ok(llmsText.includes(expectedContact), "llms.txt should publish the configured contact email.");
+    if (expectedContact !== fallbackContact) {
+      assert.ok(!llmsText.includes(fallbackContact), "llms.txt should not publish the hardcoded fallback email when a contact email is configured.");
+    }
+  } else {
+    assert.ok(llmsText.includes(fallbackContact), "llms.txt should publish the fallback contact email when none is configured.");
+  }
+  assert.ok(llmsText.includes("Service areas"), "llms.txt should list service areas.");
+  assert.ok(llmsText.includes(`${expectedSiteUrl}/web-developer-lahore`), "llms.txt should link the Lahore service page.");
+  assert.ok(llmsText.includes(`${expectedSiteUrl}/web-developer-muridke`), "llms.txt should link the Muridke service page.");
 
   const imageResponse = await request("/opengraph-image");
   assert.equal(imageResponse.status, 200, "Open Graph image should return HTTP 200.");
@@ -200,7 +315,7 @@ try {
     }
   }
 
-  console.log("Production smoke test passed: homepage metadata, security headers, images/accessibility anchors, robots.txt, sitemap.xml, Open Graph image, SVG favicon, and project data.");
+  console.log("Production smoke test passed: fresh production build, homepage metadata, security headers, images/accessibility anchors, robots.txt, sitemap.xml, Open Graph image, SVG favicon, project data, and the Lahore/Muridke service pages (status, title, canonical, share images, sitemap membership, FAQ schema).");
 } finally {
   await stopServer();
 }
