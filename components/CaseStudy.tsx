@@ -22,7 +22,7 @@ export default function CaseStudy({
 }) {
   // Project images are local only (public/): next/image has no
   // remotePatterns, so a remote URL would throw at runtime. The old
-  // https:// branch could never work — it is deleted, not kept.
+  // https:// branch could never work. It is deleted, not kept.
   const imageSrc = project.image.startsWith("/")
     ? project.image
     : "/" + project.image;

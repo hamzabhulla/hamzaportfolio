@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import type { ReactNode } from "react";
+import DragStack from "@/components/DragStack";
 import FaqAccordion from "@/components/FaqAccordion";
 import { siteUrl } from "@/lib/site-url";
 import { socialLinks } from "@/lib/social-links";
@@ -72,7 +72,7 @@ export default function LocalLanding({
       {
         "@type": "ProfessionalService",
         "@id": pageUrl + "#service",
-        name: "Hamza Bhulla — Freelance Web Developer",
+        name: "Hamza Bhulla, Freelance Web Developer",
         description: intro,
         url: pageUrl,
         email: contactEmail,
@@ -140,21 +140,7 @@ export default function LocalLanding({
             </div>
           </div>
 
-          <figure className="hero-preview">
-            <Image
-              src="/vibetalk-preview.png"
-              alt="VibeTalk chat interface preview"
-              width={1881}
-              height={894}
-              sizes="(max-width: 760px) 92vw, (max-width: 1050px) 45vw, 40vw"
-              decoding="async"
-              draggable={false}
-            />
-            <figcaption>
-              <span>VibeTalk</span>
-              <span>Realtime chat · WebRTC calls</span>
-            </figcaption>
-          </figure>
+          <DragStack />
         </div>
       </section>
 

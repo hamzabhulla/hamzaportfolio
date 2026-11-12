@@ -4,12 +4,12 @@ const contactEmail =
   process.env.NEXT_PUBLIC_CONTACT_EMAIL || "heyhamza.dev@gmail.com";
 
 // Not exported: the array is used only inside this file (schema +
-// accordion). The old `export` was dead — nothing imports it.
+// accordion). The old `export` was dead, nothing imports it.
 const faqs = [
   {
     question: "What services do you offer?",
     answer:
-      "I build full-stack web products end to end: customer-facing web apps and SaaS products, AI-powered features, and business platforms like restaurant ordering, reservations, and payments — from the interface to the backend, database, and integrations.",
+      "I build full-stack web products end to end: customer-facing web apps and SaaS products, AI-powered features, and business platforms like restaurant ordering, reservations, and payments, from the interface to the backend, database, and integrations.",
   },
   {
     question: "Are you available for remote work with international clients?",

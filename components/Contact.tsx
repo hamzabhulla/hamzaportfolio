@@ -55,7 +55,6 @@ export default function Contact({ cta, heading, currentArea }: { cta?: string; h
           ) : (
             <a href="/web-developer-lahore">Lahore</a>
           )}
-          <span aria-hidden="true">·</span>
           {currentArea === "muridke" ? (
             <span aria-current="page">Muridke</span>
           ) : (
