@@ -22,6 +22,11 @@ I build production web apps end to end: real-time messaging, commerce, and busin
 
 More work: [github.com/hamzabhulla](https://github.com/hamzabhulla)
 
+## Service areas
+
+- [Freelance web developer in Lahore](https://hamzabhulla.vercel.app/web-developer-lahore)
+- [Web developer in Muridke](https://hamzabhulla.vercel.app/web-developer-muridke)
+
 ## What I do
 
 - **Real-time web apps**: chat, presence, calls, and live updates with Supabase Realtime and WebRTC.
