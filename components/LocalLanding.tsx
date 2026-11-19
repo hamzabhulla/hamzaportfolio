@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import type { ReactNode } from "react";
 import DragStack from "@/components/DragStack";
@@ -75,7 +76,7 @@ export function LocalFaqSection({
 const contactEmail =
   process.env.NEXT_PUBLIC_CONTACT_EMAIL || "heyhamza.dev@gmail.com";
 
-export default function LocalLanding({
+export default async function LocalLanding({
   city,
   area,
   canonicalPath,
@@ -89,6 +90,9 @@ export default function LocalLanding({
   process,
   faqs,
 }: LocalLandingProps) {
+  // Per-request CSP nonce from proxy.ts; see app/page.tsx. Server
+  // Component (no "use client"), so headers() is read here directly.
+  const nonce = (await headers()).get("x-nonce");
   const base = siteUrl;
   const pageUrl = base + canonicalPath;
 
@@ -137,6 +141,7 @@ export default function LocalLanding({
     <>
       <script
         type="application/ld+json"
+        nonce={nonce ?? undefined}
         dangerouslySetInnerHTML={{ __html: schemaJsonLd }}
       />
 

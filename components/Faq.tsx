@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import FaqAccordion from "@/components/FaqAccordion";
 
 const contactEmail =
@@ -50,7 +51,11 @@ const faqSchema = {
   })),
 };
 
-export default function Faq() {
+export default async function Faq() {
+  // Per-request CSP nonce from proxy.ts; see app/page.tsx. This is a
+  // Server Component (no "use client"), so headers() can be read here
+  // directly — no prop threading needed.
+  const nonce = (await headers()).get("x-nonce");
   const faqJsonLd = JSON.stringify(faqSchema).replace(/</g, "\\u003c");
 
   return (
@@ -61,6 +66,7 @@ export default function Faq() {
     >
       <script
         type="application/ld+json"
+        nonce={nonce ?? undefined}
         dangerouslySetInnerHTML={{ __html: faqJsonLd }}
       />
       <div className="section-topline">
