@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import SiteNav from "@/components/SiteNav";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
@@ -62,13 +63,20 @@ const personSchema = {
   },
 };
 
-export default function Home() {
+export default async function Home() {
+  // The per-request CSP nonce set by proxy.ts (x-nonce header). Reading
+  // headers() also opts this route into dynamic rendering, which the
+  // nonce mechanism requires (static pages have no request to read a
+  // nonce from). The nonce is stamped on the JSON-LD script so the
+  // nonce-based CSP allows it; without it the script would be blocked.
+  const nonce = (await headers()).get("x-nonce");
   const personJsonLd = JSON.stringify(personSchema).replace(/</g, "\\u003c");
 
   return (
     <>
       <script
         type="application/ld+json"
+        nonce={nonce ?? undefined}
         dangerouslySetInnerHTML={{ __html: personJsonLd }}
       />
       <SiteNav />
