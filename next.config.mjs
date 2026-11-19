@@ -2,22 +2,12 @@
 const nextConfig = {
   poweredByHeader: false,
   async headers() {
-    // CSP is intentionally permissive on inline scripts/styles: Next.js
-    // App Router ships inline runtime scripts and the JSON-LD blocks are
-    // inline <script> tags, so a strict CSP without 'unsafe-inline' would
-    // break the app. 'frame-ancestors none' matches X-Frame-Options: DENY.
-    const contentSecurityPolicy = [
-      "default-src 'self'",
-      "script-src 'self' 'unsafe-inline'",
-      "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: https:",
-      "font-src 'self' data:",
-      "connect-src 'self'",
-      "object-src 'none'",
-      "base-uri 'self'",
-      "form-action 'self'",
-      "frame-ancestors 'none'",
-    ].join("; ");
+    // No Content-Security-Policy here: the CSP is set per request by
+    // proxy.ts with a fresh nonce (script-src has no 'unsafe-inline',
+    // which capped the securityheaders.com grade at A). A CSP set here
+    // AND by the proxy would both be enforced, and this static one would
+    // keep 'unsafe-inline' effective. The other four headers are static
+    // and stay here. 'frame-ancestors none' matches X-Frame-Options: DENY.
     const securityHeaders = [
       { key: "X-Content-Type-Options", value: "nosniff" },
       { key: "X-Frame-Options", value: "DENY" },
@@ -26,7 +16,6 @@ const nextConfig = {
         key: "Permissions-Policy",
         value: "camera=(), microphone=(), geolocation=()",
       },
-      { key: "Content-Security-Policy", value: contentSecurityPolicy },
     ];
 
     return [
