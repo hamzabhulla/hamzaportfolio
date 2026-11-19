@@ -137,12 +137,68 @@ try {
     "camera=(), microphone=(), geolocation=()",
     "Unused sensitive browser capabilities should be disabled.",
   );
-  assert.equal(
-    homeResponse.headers.get("content-security-policy"),
-    "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'",
-    "A Content-Security-Policy header should be present (unsafe-inline is required by Next.js inline runtime scripts and JSON-LD).",
+  // CSP is set per request by proxy.ts with a fresh nonce, so it cannot
+  // be exact-matched: parse the directives and assert their shape.
+  // Negative test first: 'unsafe-inline' in script-src must fail this
+  // test — it is the one value that capped the securityheaders.com grade
+  // at A, and a regression to it must be caught here, not in production.
+  const homeCsp = homeResponse.headers.get("content-security-policy");
+  assert.ok(homeCsp, "A Content-Security-Policy header should be present.");
+  assert.ok(!homeCsp.includes(","), "Exactly one Content-Security-Policy header should be present (two headers are joined with a comma).");
+  const cspDirectives = new Map(
+    homeCsp.split(";").map((directive) => {
+      const [name, ...values] = directive.trim().split(/\s+/);
+      return [name, values];
+    }),
   );
+  const homeScriptSrc = cspDirectives.get("script-src") ?? [];
+  assert.ok(
+    homeScriptSrc.some((value) => /^'nonce-[A-Za-z0-9+/=]+'$/.test(value)),
+    "script-src should carry a per-request nonce.",
+  );
+  assert.ok(
+    !homeScriptSrc.includes("'unsafe-inline'"),
+    "script-src must not contain 'unsafe-inline' (it caps the securityheaders.com grade at A).",
+  );
+  assert.ok(homeScriptSrc.includes("'strict-dynamic'"), "script-src should include 'strict-dynamic'.");
+  assert.ok(homeScriptSrc.includes("'self'"), "script-src should include 'self'.");
+  const expectedDirectives = new Map([
+    ["default-src", ["'self'"]],
+    ["style-src", ["'self'", "'unsafe-inline'"]],
+    ["img-src", ["'self'", "data:", "https:"]],
+    ["font-src", ["'self'", "data:"]],
+    ["connect-src", ["'self'"]],
+    ["object-src", ["'none'"]],
+    ["base-uri", ["'self'"]],
+    ["form-action", ["'self'"]],
+    ["frame-ancestors", ["'none'"]],
+  ]);
+  for (const [name, values] of expectedDirectives) {
+    assert.deepEqual(cspDirectives.get(name), values, `CSP directive ${name} should be unchanged.`);
+  }
+  assert.equal(cspDirectives.size, expectedDirectives.size + 1, "CSP should contain exactly the expected directives.");
+  const homeNonce = homeScriptSrc.find((value) => value.startsWith("'nonce-")).slice(7, -1);
+  // A second request must carry a different nonce: a static nonce would
+  // let an attacker reuse it, and would mean the proxy is not running.
+  const homeResponse2 = await request("/");
+  assert.equal(homeResponse2.status, 200, "A second homepage request should return HTTP 200.");
+  const homeCsp2 = homeResponse2.headers.get("content-security-policy");
+  const homeNonce2 = (homeCsp2.match(/'nonce-([A-Za-z0-9+/=]+)'/) ?? [])[1];
+  assert.ok(homeNonce2, "A second homepage response should carry a CSP nonce.");
+  assert.notEqual(homeNonce2, homeNonce, "Two consecutive responses must carry different nonces.");
   const html = await homeResponse.text();
+
+  // The rendered page must carry the same nonce the header promises: the
+  // JSON-LD script tag and the Next.js inline runtime scripts.
+  const homeJsonLdTag = html.match(/<script[^>]*type="application\/ld\+json"[^>]*>/);
+  assert.ok(homeJsonLdTag, "The homepage should render a JSON-LD script tag.");
+  const homeJsonLdNonce = (homeJsonLdTag[0].match(/nonce="([A-Za-z0-9+/=]+)"/) ?? [])[1];
+  assert.ok(homeJsonLdNonce, "The homepage JSON-LD script should carry a nonce attribute.");
+  assert.equal(homeJsonLdNonce, homeNonce, "The homepage JSON-LD nonce must match the CSP header nonce.");
+  assert.ok(
+    html.split(`nonce="${homeNonce}"`).length - 1 >= 2,
+    "Next.js inline runtime scripts should carry the CSP nonce as well as the JSON-LD script.",
+  );
 
   assert.ok(html.includes("Hamza Bhulla | Full-Stack Developer"), "The homepage title should render.");
   const canonicalMatch = html.match(/<link\b(?=[^>]*\brel="canonical")(?=[^>]*\bhref="([^"]+)")[^>]*>/);
@@ -210,6 +266,18 @@ try {
     assert.equal(pageResponse.status, 200, `${localPage.path} should return HTTP 200.`);
     assert.match(pageResponse.headers.get("content-type") ?? "", /text\/html/i);
     const pageHtml = await pageResponse.text();
+    // Same nonce checks as the homepage: fresh per-request nonce in the
+    // header, no 'unsafe-inline' in script-src, and the page's JSON-LD
+    // script stamped with that same nonce.
+    const pageCsp = pageResponse.headers.get("content-security-policy");
+    assert.ok(pageCsp, `${localPage.path} should carry a Content-Security-Policy header.`);
+    const pageNonce = (pageCsp.match(/'nonce-([A-Za-z0-9+/=]+)'/) ?? [])[1];
+    assert.ok(pageNonce, `${localPage.path} CSP should carry a nonce.`);
+    const pageScriptSrc = (pageCsp.split(";").find((d) => d.trim().startsWith("script-src")) ?? "").trim().split(/\s+/).slice(1);
+    assert.ok(!pageScriptSrc.includes("'unsafe-inline'"), `${localPage.path} script-src must not contain 'unsafe-inline'.`);
+    const pageJsonLdTag = pageHtml.match(/<script[^>]*type="application\/ld\+json"[^>]*>/);
+    assert.ok(pageJsonLdTag, `${localPage.path} should render a JSON-LD script tag.`);
+    assert.ok(pageJsonLdTag[0].includes(`nonce="${pageNonce}"`), `${localPage.path} JSON-LD nonce must match its CSP header nonce.`);
     assert.ok(pageHtml.includes(`<title>${localPage.title}</title>`), `${localPage.path} should render its title.`);
     const localCanonicalMatch = pageHtml.match(/<link\b(?=[^>]*\brel="canonical")(?=[^>]*\bhref="([^"]+)")[^>]*>/);
     assert.ok(localCanonicalMatch, `${localPage.path} canonical link should be present.`);
@@ -235,7 +303,9 @@ try {
     for (const targetId of pageAnchorTargets) {
       assert.ok(pageRenderedIds.has(targetId), `${localPage.path} in-page link should target an existing element: #${targetId}`);
     }
-    const jsonLdBlocks = [...pageHtml.matchAll(/<script type="application\/ld\+json">(.*?)<\/script>/gs)]
+    // The JSON-LD script tag carries a nonce attribute now, so the match
+    // must tolerate attributes before/after type=.
+    const jsonLdBlocks = [...pageHtml.matchAll(/<script[^>]*type="application\/ld\+json"[^>]*>(.*?)<\/script>/gs)]
       .map(([, json]) => {
         try {
           return JSON.parse(json);
